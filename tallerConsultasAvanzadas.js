@@ -1,28 +1,6 @@
-// use('sample_airbnb');
-// db.listingsAndReviews.aggregate([
-//     {
-//         $addFields: {
-//           conteo:{$size:"$amenities"}        
-//         }
-//     },
-//     {
-//         $match: {
-//           "conteo":{$gte:{$size:"amenities"}}
-//         }
-//     },
-//     {
-//         $project: {"_id":-1,"name":1,"description":1}
-//     },
-//     {
-//         $sort:{"conteo":1}
-//     }
-// ])
-
-
 //1
 // use('sample_airbnb');
-// db.listingsAndReviews.aggregate([
-//   {
+// db.listingsAndReviews.aggregate([   {
 //     $addFields: {
 //       conteo: { $size: "$amenities" }        
 //     }
@@ -43,60 +21,59 @@
 // ])
 
 //2
-//  db.listingsAndReviews.aggregate([
-//      {
-//        $match: {
-//          "amenities": { $in: ["wifi", "internet"] }
-//        }
-//      }
-//  ])
+// db.listingsAndReviews.aggregate([
+//   {
+//     $match: { amenities: { $in: ["Wifi", "Internet"] } }
+//   },
+//   {
+//     $group: { "_id": 0, contador: { $sum: 1 } }
+//   }
+// ])
 
+
+ 
 //3
 // db.listingsAndReviews.aggregate([
-//     {
-//         $addFields: {
-//             valoracion: {$avg:"$review_scores.review_scores_rating" },
-//             comentarios:{$avg:"$reviews.comments"}
-                   
-//         }
-//     },
-//     {
-//         $match:{$and:[{"comentarios":{$gte:50}},{"valoracion":{$gte:80}}, "amenites":{$in:["Ethernet"]},"address.country":"Brazil"]}
-//     },
-//     {
-//         $sort: { "conteo": -1 }
-//     },
-//     {
-//         $project: {
-//             "_id": 0,
-//             "name":1,
-//             "amenities": 1
-//             "address":1
-//             "valoraciones":1
-//             "comentarios":1
-//         }
-//     }
-// ])
+//    {
+//       $match: {
+//          "address.country": "Brazil",
+//          "review_scores.review_scores_rating": { $gte: 80 },
+//          "amenities": { $in: ["Internet"] },
+//          "number_of_reviews": { $gte: 50 }
+//       }
+//    },
+//    {
+//       $project: {
+//          _id: 0,
+//          name: 1,
+//          address: 1,
+//          review_scores: 1,
+//          amenities: 1,
+//          number_of_reviews: 1
+//       }
+//    }
+// ]);
+
+
 
 //4
 // db.listingsAndReviews.aggregate([
-//     {
-//         $addFields: {
-//             promedio:{$avg:"$price"}
-                   
-//         }
-//     },
-//     {
-//         $match:{$in:[{"property_type":"House"}]}
-//     },
-//     {
-//         $project: {
-//             "_id": 0,
-//              "name":1,
-//              "address":1,
-//              "promedio":1
-//         }
-        
-//     }
-    
-// ])
+//    {
+//       $match: {
+//          "room_type": "Entire home/apt"
+//       }
+//    },
+//    {
+//       $group: {
+//          _id: "$address.country",
+//          promedio: { $avg: "$price" }
+//       }
+//    },
+//    {
+//       $project: {
+//          _id: 0,
+//          country: "$_id",
+//          promedio: 1
+//       }
+//    }
+// ]);
